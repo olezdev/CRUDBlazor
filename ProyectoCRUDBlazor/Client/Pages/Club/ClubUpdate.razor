@@ -1,0 +1,27 @@
+﻿@page "/club-edit/{IdClub:int}"
+@inject HttpClient Http
+@inject NavigationManager navManager
+@using ProyectoCRUDBlazor.Shared.Models
+
+<h3>Club Editar</h3>
+
+<FormClub TextButton="Editar Club" OnValidSubmit="@EditClub" club="@miClub" />
+
+@code {
+
+    [Parameter]
+    public int IdClub { get; set; }
+
+    ClubDTO miClub = new ClubDTO();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        miClub = await Http.GetFromJsonAsync<ClubDTO>($"api/clubs/{IdClub}");
+    }
+
+    protected async Task EditClub()
+    {
+        await Http.PutAsJsonAsync($"api/clubs/{IdClub}", miClub);
+        navManager.NavigateTo("club-index");
+    }
+}

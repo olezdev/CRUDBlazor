@@ -1,0 +1,31 @@
+﻿@using ProyectoCRUDBlazor.Shared.Models
+
+<EditForm Model="@club" OnValidSubmit="@OnValidSubmit">
+    <div class="form-control">
+        <label class="form-label">Nombre:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="club.Name" />
+            <ValidationMessage For="@(() => club.Name)" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="DateFundation" class="form-label">Fecha de fundación: </label>
+        <div>
+            <InputDate id="DateFundation" class="form-control" @bind-Value="club.DateFundation" />
+            <ValidationMessage For="@(() => club.DateFundation)" />
+        </div>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-success">@textButton</button>
+    <a href="club-index" class="btn btn-danger">Regresar</a>
+    <DataAnnotationsValidator />
+</EditForm>
+
+@code {
+    [Parameter]
+    public ClubDTO club { get; set; } = new ClubDTO();
+    [Parameter]
+    public String textButton { get; set; } = "Guardar";
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+}
