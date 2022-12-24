@@ -1,0 +1,27 @@
+﻿@using ProyectoCRUDBlazor.Shared.Models
+
+<EditForm Model="@player" OnValidSubmit="@OnValidSubmit">
+    <div class="form-group row">
+        <label class="form-label">Nombre: </label>
+        <InputText class="form-control" @bind-Value="@player.Name" />
+        <ValidationMessage For="@(() => player.Name)" />
+    </div>
+    <div class="form-group row">
+        <label for="id" class="form-label">Position: </label>
+        <InputNumber id="id" class="form-control" @bind-Value="player.Position" />
+        <ValidationMessage For="@(() => player.Position)" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-success">@TextButton</button>
+    <a href="player-index" class="btn btn-danger">Regresar</a>
+    <DataAnnotationsValidator />
+</EditForm>
+
+@code {
+    [Parameter]
+    public PlayerDTO player { get; set; }
+    [Parameter]
+    public string TextButton { get; set; }
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+}

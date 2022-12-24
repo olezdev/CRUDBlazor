@@ -1,0 +1,72 @@
+﻿@page "/player-index"
+@inject HttpClient http
+@inject IJSRuntime JS
+@using ProyectoCRUDBlazor.Shared.Models
+
+<h3 class="text-center">Lista de Jugadores</h3>
+
+<a href="player-create" class="btn btn-success">Crear Jugador</a>
+
+<hr />
+
+@if (players == null)
+{
+    <text>Cargando...</text>
+}
+else if (players.Count == 0)
+{
+    <text>No hay Jugadores en la base de datos</text>
+}
+else
+{
+    <table class="table table-info table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Posicion</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var player in players)
+            {
+                <tr>
+                    <td>@player.Id</td>
+                    <td>@player.Name</td>
+                    <td>@player.Position</td>
+                    <td>
+                        <a href="player-edit/@player.Id" class="btn btn-success">Editar</a>
+                        <button class="btn btn-danger" @onclick="@(() => DeletePlayer(player.Id))">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<hr />
+
+@code {
+    List<PlayerDTO> players { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPlayers();
+    }
+
+    async Task LoadPlayers()
+    {
+        players = await http.GetFromJsonAsync<List<PlayerDTO>>("api/players");
+    }
+
+    async Task DeletePlayer(int IdPlayer)
+    {
+        var playerSeleccionado = players.First(c => c.Id == IdPlayer);
+        var msj = $"¿Deseas borrar el {playerSeleccionado.Name}?";
+        if (await JS.InvokeAsync<bool>("confirm", msj))
+        {
+            await http.DeleteAsync($"api/players/{IdPlayer}");
+            await LoadPlayers();
+        }
+    }
+}

@@ -1,0 +1,78 @@
+﻿@page "/club-index"
+@inject HttpClient http
+@inject IJSRuntime JS 
+@using ProyectoCRUDBlazor.Shared.Models
+
+<h3 class="text-center">Lista de Clubs</h3>
+
+<a href="club-create" class="btn btn-success">Nuevo Club</a>
+
+<hr />
+@if (clubes == null)
+{
+    <p>Cargando...</p>
+}
+else if (clubes.Count == 0)
+{
+    <text>No hay personas en la base de datos</text>
+}
+else
+{
+    <table class="table table-primary table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Fecha de fundacion</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in clubes)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.DateFundation.ToString("dd MMMM, yyyy")</td>
+                    <td>
+                        <a class="btn btn-success" href="club-edit/@item.Id">Editar</a>
+                        <button class="btn btn-danger" @onclick="@(() => DeleteClub(item.Id))">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<hr />
+
+@code {
+    List<ClubDTO>? clubes { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadClubes();
+    }
+
+    async Task LoadClubes()
+    {
+        clubes = await http.GetFromJsonAsync<List<ClubDTO>>("api/clubs");
+        //Test
+        //clubes = new List<Club>()
+        //{
+        //    new Club() { Id = 1, Name= "River Plate" },
+        //    new Club() { Id = 2, Name= "Quilmes" }
+        //};
+    }
+
+    async Task DeleteClub(int IdClub)
+    {
+        var clubSeleccionado = clubes.First(c => c.Id == IdClub);
+        var msj = $"¿Deseas borrar el {clubSeleccionado.Name}?";
+        if (await JS.InvokeAsync<bool>("confirm", msj ))
+        {
+            await http.DeleteAsync($"api/clubs/{IdClub}");
+            await LoadClubes();
+        }
+        
+    }
+}

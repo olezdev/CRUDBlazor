@@ -1,0 +1,29 @@
+﻿@page "/player-edit/{IdPlayer:int}"
+@inject HttpClient Http
+@inject NavigationManager navManager
+@using ProyectoCRUDBlazor.Shared.Models
+
+<h3 class="text-center">Editar Jugador</h3>
+
+<hr />
+<FormPlayer player="@player" OnValidSubmit="@EditPlayer" TextButton="Editar Jugador" />
+<hr />
+
+@code {
+
+    [Parameter]
+    public int IdPlayer { get; set; }
+
+    PlayerDTO player = new PlayerDTO();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        player = await Http.GetFromJsonAsync<PlayerDTO>($"api/players/{IdPlayer}");
+    }
+
+    protected async Task EditPlayer()
+    {
+        await Http.PutAsJsonAsync($"api/players/{IdPlayer}", player);
+        navManager.NavigateTo("player-index");
+    }
+}

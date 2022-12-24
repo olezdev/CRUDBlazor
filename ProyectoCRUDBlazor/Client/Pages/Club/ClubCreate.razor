@@ -1,0 +1,23 @@
+﻿@page "/club-create"
+@inject HttpClient Http
+@inject NavigationManager navManager
+@using ProyectoCRUDBlazor.Shared.Models;
+
+<h3 class="text-center">Nuevo Registro Club</h3>
+
+<br />
+
+<FormClub TextButton="Crear Club" OnValidSubmit="@CreateClub" club="@club" />
+
+@code {
+    private ClubDTO club = new ClubDTO();
+
+    // definir el metodo para guardar el registro.
+    protected async Task CreateClub()
+    {
+        // POST del objeto club al controlador Clubs.
+        await Http.PostAsJsonAsync("api/clubs", club);
+
+        navManager.NavigateTo("club-index");
+    }
+}

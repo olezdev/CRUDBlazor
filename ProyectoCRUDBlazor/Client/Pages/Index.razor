@@ -1,0 +1,24 @@
+﻿@page "/"
+@inject IJSRuntime JS
+
+<PageTitle>CRUD Blazor V3</PageTitle>
+
+<h1>Practicando con clubes y jugadores!</h1>
+<ol>
+    <li>Se agrego EF en clubes y jugadores</li>
+    <li>Se agrego la capa service</li>
+    <li>Usamos abstraccion con los formularios para crear y actualizar</li>
+    <li>Injectamos IJSRuntime para usar codigo JavaScript</li>
+    <li>Se agrego capa repository con Unit of Work</li>
+</ol>
+
+<button @onclick="@ButtonClicked">Saludar</button>
+
+@*<SurveyPrompt Title="How is Blazor working for you?" />*@
+
+@code {
+    private async Task ButtonClicked()
+    {
+        await JS.InvokeAsync<bool>("alert", "hola team");
+    }
+}
