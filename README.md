@@ -1,4 +1,4 @@
-# Proyecto CRUD Blazor
+# CRUD Blazor
 
 ### CRUD en Blazor - Clubes y Jugadores (Alkemy)
 ---
